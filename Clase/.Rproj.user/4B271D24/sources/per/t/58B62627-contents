@@ -1,0 +1,27 @@
+---
+title: "C3"
+author: "Luis Domínguez"
+date: '2024-02-19'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+W<-rnorm(1000)
+X<-numeric(1000)
+X1<-numeric(1000)
+X2<-numeric(1000)
+for(t in 2:1000)
+  X[t]<-1/2*W[t-1]+W[t]
+for(t in 2:1000)
+  X1[t]<-X[t-1]
+for(t in 3:1000)
+  X2[t]<-X[t-2]
+cov(X,X2) #gama 0
+# cov(X,X1) #gama 1
+ts.plot(X)
+```
+

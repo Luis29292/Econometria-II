@@ -1,0 +1,8 @@
+"0","V<-numeric(100)"
+"0","X<-numeric(100)"
+"0","V<-sample(c(-1,1),100,replace=TRUE)"
+"0","X[1]<-0"
+"0","for(t in 2:100)"
+"0","  X[t]<-X[t-1]+V[t]"
+"0",""
+"0","plot(X,type='l')"

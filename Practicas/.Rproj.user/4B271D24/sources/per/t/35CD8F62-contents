@@ -1,0 +1,89 @@
+---
+title: "P2"
+author: "Luis Domínguez"
+date: '2024-02-06'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Para cada uno de los siguientes procesos.
+
+(1) Realiza una gráfica con los primeros 1000 valores.
+(2) Calcula la media de una serie de tiempo de cada proceso usando $R (mean(Xt))$.
+(3) Calcula algebraicamente el valor esperado para los incisos a) y b).
+(4) Determina si la parte homogénea de los procesos estocásticos es convergente o explosiva.
+
+a) $X_t = W_t$
+```{r}
+W<-rnorm(1000)
+X<-numeric(1000)
+# plot(W,type='l')
+for(t in 2:1000)
+  X[t]<-W[t]
+plot(X,type='l')
+mean(X)
+```
+En este caso, el valor esperado es simplemente cero en cualquier punto de tiempo t, ya que es un proceso de Wiener, y el valor esperado de un proceso de Wiener en cualquier punto de tiempo es cero. Entonces, $E[X_t]=0$
+
+b) $X_t = X_{t−1} + W_t$, con $X_1 = 2$
+```{r}
+W<-rnorm(1000)
+X<-numeric(1000)
+# plot(W,type='l')
+X[1]=2
+for(t in 2:1000)
+  X[t]<-X[t-1]+W[t]
+plot(X,type='l')
+mean(X)
+```
+Para el inciso b), $X_t=X_{t−1}+W_t$, $X_1=2$ y $E[W_i]=0$, por lo que $E[X_t]=2$.
+
+c) $X_t =−\frac{1}{2} X_{t−1} + W_t$,con $X_1 = 4$
+```{r}
+W<-rnorm(1000)
+X<-numeric(1000)
+# plot(W,type='l')
+X[1]=4
+for(t in 2:1000)
+  X[t]<--1/2*X[t-1]+W[t]
+plot(X,type='l')
+mean(X)
+```
+
+d) $X_t =\frac{1}{2}W_{t−3} −\frac{1}{3}W_{t−2} −\frac{1}{4}W_{t−1} + W_t$, con $X_1 = 2$
+```{r}
+W<-rnorm(1000)
+X<-numeric(1000)
+# plot(W,type='l')
+X[1]<-2
+for(t in 4:1000)
+  X[t]<-1/2*W[t-3]-1/3*W[t-2]-1/4*W[t-1]+W[t]
+plot(X,type='l')
+mean(X)
+```
+e) $X_t = X_{t−1} − X_{t−2} + W_t$ con $X_1 = 2$ con $X_2 = 4$.
+```{r}
+W<-rnorm(1000)
+X<-numeric(1000)
+# plot(W,type='l')
+X[1]<-2
+X[2]<-4
+for(t in 3:1000)
+  X[t]<-X[t-1]-X[t-2]+W[t]
+plot(X,type='l')
+mean(X)
+```
+f) $X_t = X_{t−1} −\frac{1}{2}X_{t−2} + W_t$ con $X_1 = 1$ con $X_2 = 4$
+```{r}
+W<-rnorm(1000)
+X<-numeric(1000)
+# plot(W,type='l')
+X[1]<-1
+X[2]=4
+for(t in 3:1000)
+  X[t]<-X[t-1]-1/2*X[t-2]+W[t]
+plot(X,type='l')
+mean(X)
+```

@@ -1,0 +1,123 @@
+---
+title: "P3"
+author: "Luis Domínguez"
+date: '2024-02-19'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Para cada uno de los siguientes procesos.
+
+(1) Realiza una gráfica con los primeros 1000 valores.
+(2) a) b) y c) calcula algebraicamente el valor esperado.
+(3) a) b) y c) calcula la media de cada proceso usando R.
+(4) Para a) b) y c) calcula algebraicamente
+(a) γ0
+(b) γ1
+(c) γ2
+(d) γ3
+(5) Para a), b) y c) calcula los estimadores usando R.
+(a) ˆγ0
+(b) ˆγ1
+(c) ˆγ2
+(d) ˆγ3
+(6) Determina si los procesos son MA, AR o ARMA y de qué orden.
+(7) Determina si los procesos estocásticos son estacionarios o no.
+a) $X_t = 3W_{t−3} + W_t$
+```{r}
+W<-rnorm(1000)
+X<-numeric(1000)
+X1<-numeric(1000)
+X2<-numeric(1000)
+X3<-numeric(1000)
+for(t in 4:1000)
+  X[t]<-3*W[t-3]+W[t]
+for(t in 2:1000)
+   X1[t]<-X[t-1]
+for(t in 3:1000)
+  X2[t]<-X[t-2]
+for(t in 4:1000)
+  X3[t]<-X[t-3]
+ts.plot(X)
+#El valor esperado es de cero
+mean(X) #Media del proceso
+#Gama algebráico
+#Gama0 = 10
+#Gama1 = 0
+#Gama2 = 0
+#Gama 3 = 3
+cov(X,X) #gama 0
+cov(X,X1) #gama 1
+cov(X,X2) #gama 2
+cov(X,X3) #gama 3
+#El proceso es MA(3)
+#Al ser MA, es un proceso estacionario
+```
+
+b) $X_t =−\frac{1}{2} W_{t−1} + W_t$
+```{r}
+W<-rnorm(1000)
+X<-numeric(1000)
+X1<-numeric(1000)
+X2<-numeric(1000)
+X3<-numeric(1000)
+for(t in 2:1000)
+  X[t]<--1/2*W[t-1]+W[t]
+for(t in 2:1000)
+   X1[t]<-X[t-1]
+for(t in 3:1000)
+  X2[t]<-X[t-2]
+for(t in 4:1000)
+  X3[t]<-X[t-3]
+ts.plot(X)
+#El valor esperado es de cero
+mean(X) #Media del proceso
+#Gama algebráico
+#Gama0 = 5/4
+#Gama1 = -1/2
+#Gama2 = 0
+#Gama 3 = 0
+cov(X,X) #gama 0
+cov(X,X1) #gama 1
+cov(X,X2) #gama 2
+cov(X,X3) #gama 3
+#El proceso es MA(1)
+#Al ser MA, es un proceso estacionario
+```
+
+c) $X_t = 3W_{t−2} +\frac{1}{3}W_{t−1} + W_t$
+```{r}
+W<-rnorm(1000)
+X<-numeric(1000)
+X1<-numeric(1000)
+X2<-numeric(1000)
+X3<-numeric(1000)
+for(t in 3:1000)
+  X[t]<-3*W[t-2]+1/3*W[t-1]+W[t]
+for(t in 2:1000)
+   X1[t]<-X[t-1]
+for(t in 3:1000)
+  X2[t]<-X[t-2]
+for(t in 4:1000)
+  X3[t]<-X[t-3]
+ts.plot(X)
+#El valor esperado es de cero
+mean(X) #Media del proceso
+#Gama algebráico
+#Gama0 = 10.11
+#Gama1 = 4/3
+#Gama2 = 3
+#Gama 3 = 
+cov(X,X) #gama 0
+cov(X,X1) #gama 1
+cov(X,X2) #gama 2
+cov(X,X3) #gama 3
+#El proceso es MA(2)
+#Al ser MA, es un proceso estacionario
+```
+
+d) $X_t = X_{t−1} −\frac{1}{2}X_{t−2} +\frac{1}{2}W_{t−1} + W_t$ con $X_1 = 2$ con $X_2 = 4.$
+e) $X_t =\frac{3}{2}X_{t−1} − X_{t−2} +\frac{3}{2}W_{t−3} −\frac{1}{2}W_{t−1}$ + Wt con $X_1 = 1$ con $X_2 = 4$

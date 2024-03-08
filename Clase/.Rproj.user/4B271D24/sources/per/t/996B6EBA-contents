@@ -1,0 +1,31 @@
+---
+title: "C2"
+author: "Luis Domínguez"
+date: '2024-02-06'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+V<-numeric(100)
+X<-numeric(100)
+V<-sample(c(-1,1),100,replace=TRUE)
+X[1]<-0
+for(t in 2:100)
+  X[t]<-X[t-1]+V[t]
+
+plot(X,type='l')
+```
+```{r}
+W<-rnorm(1000)
+Y<-numeric(1000)
+plot(W,type='l')
+for(t in 2:1000)
+  Y[t]<-Y[t-1]+W[t]
+plot(Y,type='l')
+```
+
