@@ -120,4 +120,28 @@ cov(X,X3) #gama 3
 ```
 
 d) $X_t = X_{t−1} −\frac{1}{2}X_{t−2} +\frac{1}{2}W_{t−1} + W_t$ con $X_1 = 2$ con $X_2 = 4.$
+```{r}
+W<-rnorm(1000)
+X<-numeric(1000)
+X[1]=2
+X[2]=4
+for(t in 3:1000)
+  X[t]<-X[t-1]-1/2*X[t-2]+1/2*W[t-1]+W[t]
+ts.plot(X)
+#El proceso es ARMA(2,1)
+#El proceso es estacionario
+```
+
 e) $X_t =\frac{3}{2}X_{t−1} − X_{t−2} +\frac{3}{2}W_{t−3} −\frac{1}{2}W_{t−1}$ + Wt con $X_1 = 1$ con $X_2 = 4$
+```{r}
+W<-rnorm(1000)
+X<-numeric(1000)
+X[1]=1
+X[2]=4
+for(t in 4:1000)
+  X[t]<-3/2*X[t-1]-X[t-2]+3/2*W[t-3]-1/2*W[t-1]+W[t]
+ts.plot(X)
+#El proceso es ARMA(2,3)
+#El proceso no es estacionario
+```
+
