@@ -1,0 +1,64 @@
+---
+title: "P5"
+author: "Luis Domínguez"
+date: '2024-03-20'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tseries)
+```
+
+## Práctica 5
+En el aula virtual se encuentran los archivos `X.csv`, `Y.csv`, `Z.csv`.
+```{r}
+library(readr)
+X <- read_csv("./X.csv")
+Y <- read_csv("./Y.csv")
+Z <- read_csv("./Z.csv")
+```
+
+
+
+
+
+### (1) Una serie de tiempo integrada, `Xt`
+- **a) Carga en R los datos del archivo.** Los datos contienen una serie de tiempo `X.csv`. Llama a esta serie de tiempo `Xt`.
+```{r}
+Xt<-as.ts(X)
+ts.plot(Xt)
+```
+
+- **b) Determina si `Xt` es estacionaria o no.** Explica por qué es o no es estacionaria.
+```{r}
+adf.test(Xt)
+```
+Al ser mayor que 0.5, no es estacionaria
+
+- **c) Convierte a la serie de tiempo en una serie de tiempo estacionaria.** Explica tu procedimiento.
+```{r}
+dX1<-diff(Xt)
+plot(dX1, type="l", col="blue", lwd=2, xlab="t", ylab="dX(t)")
+adf.test(dX1)
+dX2<-diff(dX1)
+plot(dX2, type="l", col="blue", lwd=2, xlab="t", ylab="dX(t)")
+adf.test(dX2)
+dX3<-diff(dX2)
+plot(dX3, type="l", col="blue", lwd=2, xlab="t", ylab="dX(t)")
+adf.test(dX3)
+```
+
+- **d) Concluye que `Xt` es integrada de orden `d`, `I(d)`.** ¿Cuál es el valor de `d`?
+
+Realiza el mismo ejercicio para `Yt`, `Zt`.
+
+### (2) La serie de tiempo `Yt`
+- **a) Una vez que tu serie de tiempo `Yt` sea estacionaria, llama a esta nueva serie de tiempo, `Pt` (realiza un cambio de variable).** Grafica las funciones `acf` y `pacf` de `Pt`. Pide a R que escriba los valores numéricos de las funciones `acf` y `pacf` de `Pt`.
+- **b) Revisa la `acf` y `pacf` de `Pt` para determinar qué modelo de serie de tiempo podría ser el que generó a `Pt`.** Justifica por qué podría ser un `AR(p)` y determina de qué orden sería.
+- **c) Conclusión:** Concluye que la serie original `Yt` es candidata a ser un `ARIMA(p, d, q)` y escribe los valores de `p`, `d`, `q`.
+
+### (3) La serie de tiempo `Zt`
+- **a) Una vez que tu serie de tiempo `Zt` sea estacionaria, llama a esta nueva serie de tiempo, `Ht` (realiza un cambio de variable).** Grafica las funciones `acf` y `pacf` de `Ht`. Pide a R que escriba los valores numéricos de las funciones `acf` y `pacf` de `Ht`.
+- **b) Revisa la `acf` y `pacf` de `Ht` para determinar qué modelo de serie de tiempo podría ser el que generó a `Ht`.** Justifica por qué podría ser un `MA(q)` y determina de qué orden sería.
+- **c) Conclusión:** Concluye que la serie original `Zt` es candidata a ser un `ARIMA(p, d, q)` y escribe los valores de `p`, `d`, `q`.

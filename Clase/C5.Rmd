@@ -1,0 +1,24 @@
+---
+title: "C5"
+author: "Luis Domínguez"
+date: '2024-03-20'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tseries)
+```
+
+```{r}
+W<-rnorm(600)
+X<-numeric(600)
+for (t in 2:600){
+  X[t]<-X[t-1]+W[t]
+}
+plot(X, type="l", col="blue", lwd=2, xlab="t", ylab="X(t)")
+adf.test(X)
+dX1<-

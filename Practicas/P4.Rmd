@@ -1,0 +1,89 @@
+---
+title: "P4"
+author: "Luis Domínguez"
+date: '2024-03-20'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+(1) Realiza una gráfica con los primeros 400 valores de los siguientes procesos
+estocásticos.
+a) $X_t = 0.4W_{t−1} + W_t$
+```{r}
+n<-400
+W<-rnorm(n)
+X<-numeric(n)
+
+for (t in 2:n)
+  X[t]<-0.4*W[t-1]+W[t]
+
+ts.plot(W)
+ts.plot(X)
+
+acfx<-acf(X)
+acfx
+pacfx<-pacf(X)
+pacfx
+```
+b) $X_t = 0.3W_{t−2} − 0.5W_{t−1} + W_t$
+```{r}
+n<-400
+W<-rnorm(n)
+X<-numeric(n)
+
+for (t in 3:n)
+  X[t]<-0.3*W[t-2]-0.5*W[t-1]+W[t]
+
+ts.plot(W)
+ts.plot(X)
+
+acfx<-acf(X)
+acfx
+pacfx<-pacf(X)
+pacfx
+```
+c) $X_t = 0.7X_{t−1} + W_t$ con $X_1 = 0$ con $X_2 = 0$
+```{r}
+n<-400
+W<-rnorm(n)
+X<-numeric(n)
+X[1]<-0
+X[2]<-0
+
+for (t in 2:n)
+  X[t]<-0.7*X[t-1]+W[t]
+
+ts.plot(W)
+ts.plot(X)
+
+acfx<-acf(X)
+acfx
+pacfx<-pacf(X)
+pacfx
+```
+d) $X_t = 0.2X_{t−1} + 0.3X_{t−2} + W_t$ con $X_1 = 1$ con $X_2 = 0$
+```{r}
+n<-400
+W<-rnorm(n)
+X<-numeric(n)
+X[1]<-1
+X[2]<-0
+
+for (t in 3:n)
+  X[t]<-0.2*X[t-1]+0.3*X[t-2]+W[t]
+
+ts.plot(W)
+ts.plot(X)
+
+acfx<-acf(X)
+acfx
+pacfx<-pacf(X)
+pacfx
+```
+(2) Grafica la función de autocorrelación de los procesos estimada por R (usa la función acf(X)).
+(3) Grafica la función de autocorrelación parcial de los procesos estimada por R (usa la función pacf(X)).
+
+Para los incisos
