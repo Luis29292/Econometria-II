@@ -1,0 +1,61 @@
+---
+title: "Boxjenkins"
+author: "Luis Domínguez"
+date: '2024-04-03'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+```
+
+```{r}
+W<-rnorm(2000)
+X<-numeric(2000)
+for(t in 3:2000){
+  X[t]<-0.3*X[t-1]+0.5*X[t-2]+W[t]
+}
+ts.plot(X)
+acf(X)
+pacf(X)
+modelo<-arima(X,order=c(2,0,0))
+modelo
+modelo1<-arima(X,order=c(2,0,2))
+modelo1
+```
+```{r}
+P<-3
+D<-3
+Q<-3
+tabla<-data.frame()
+for(p in 0:P){
+  for(d in 0:D){
+    for(q in 0:Q){
+      modelo<-arima(X,order=c(p,d,q))
+      AIC<-AIC(modelo)
+      sbic<-AIC(modelo,k=log(length(X)))
+      tabla<-rbind(tabla,c(p,d,q,AIC,sbic))
+    }
+  }
+}
+tabla<-rename(tabla, 'p'=1,'d'=2,'q'=3,'AIC'=4,'sbic'=5)
+tabla<-tabla[order(tabla$AIC),]
+# tabla<-tabla[order(tabla$sbic),]
+tabla
+```
+```{r}
+ajuste1<-arima(X,order=c(2,0,0))
+ajuste1
+confint(ajuste1)
+plot(ajuste1$residuals)
+acf(ajuste1$residuals)
+Box.test(ajuste1$residuals,lag=20,type='Ljung-Box')
+
+ajuste2<-arima(X,order=c(1,0,2))
+ajuste2
+confint(ajuste2)
+Box.test(ajuste2$residuals,lag=20,type='Ljung-Box')
+```
+
+

@@ -21,4 +21,25 @@ for (t in 2:600){
 }
 plot(X, type="l", col="blue", lwd=2, xlab="t", ylab="X(t)")
 adf.test(X)
-dX1<-
+dX1<-diff(X)
+plot(dX1, type="l", col="blue", lwd=2, xlab="t", ylab="dX(t)")
+adf.test(dX1)
+```
+```{r}
+W<-rnorm(600)
+Y<-numeric(600)
+for (t in 3:600){
+  Y[t]<-2*Y[t-1]-Y[t-2]+1/3*W[t-1]+1/2*W[t-2]+W[t]
+}
+plot(Y, type="l", col="blue", lwd=2, xlab="t", ylab="Y(t)")
+adf.test(Y)
+dY1<-diff(Y)
+plot(dY1, type="l", col="blue", lwd=2, xlab="t", ylab="dY(t)")
+adf.test(dY1)
+dY2<-diff(dY1)
+plot(dY2, type="l", col="blue", lwd=2, xlab="t", ylab="dY2(t)")
+adf.test(dY2)
+```
+
+
+

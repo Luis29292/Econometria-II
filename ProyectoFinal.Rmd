@@ -1,0 +1,88 @@
+---
+title: "Proyecto Final"
+author: "Luis Domínguez & Miguel Gutiérrez"
+date: '2024-04-22'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tseries)
+library(dplyr)
+library(xts)
+```
+
+
+# Proyecto Final
+
+## Primera Parte: Selección del Tema y Análisis Exploratorio de los Datos
+
+### 1. Selección del Tema
+Selecciona un tema de tu interés al que se pueda aplicar un modelo ARIMA para una serie de tiempo.
+
+**Predicción de precios de acciones de BMW**
+
+### 2. Justificación del Tema
+Justifica brevemente la relevancia del tema y la herramienta que utilizarás (modelo ARIMA para una serie de tiempo). Busca antecedentes en la literatura especializada.
+
+**Utilizaremos los datos históricos del precio de las acciones de BMW y el modelo ARIMA para predecir el comportamiento futuro de sus precios de acciones.**
+
+### 3. Recopilación de Datos
+Recaba los datos que necesites y determina la ventana de tiempo que sea más adecuada para tu investigación.
+```{r}
+Xt<-read.csv("DatosBMW.csv")
+Xt_cierre <- select(Xt, Cierre)
+# Xt_cierre<-as.ts(Xt_cierre)
+# plot(Xt_cierre, main="Precio de las acciones de BMW", ylab="Precio", xlab="Tiempo")
+```
+
+
+### 4. Descripción de la Variable
+Describe la variable que utilizarás, los nombres que utilizarás, las unidades, la fuente de dónde obtuviste los datos.
+
+**Variable a utilizar: cierre del precio diario del acción**
+
+**Unidades: Euros**
+
+**Fuente: https://mx.investing.com/equities/bay-mot-werke-historical-data**
+
+### 5. Organización de Datos en RStudio
+Organiza los datos en una tabla para RStudio. Coloca los nombres adecuados en las columnas usando la biblioteca `dplyr()`.
+```{r}
+Xt_cierre<-ts(Xt_cierre, start=c(2009,99), end=c(2024,113), frequency=365)
+Xt_cierre
+```
+
+
+### 6. Gráfica de la Serie de Tiempo
+Elabora una gráfica de tu serie de tiempo. Cada gráfica debe de ir acompañada de una breve explicación o descripción. Cada afirmación debe de ir acompañada de una breve justificación. Además, debe de ir con los nombres adecuados en los ejes Y y X. Usa las funciones `xlab` y `ylab` de la función `plot()`.
+```{r}
+plot(Xt_cierre, main="Precio de las acciones de BMW", ylab="Precio", xlab="Tiempo")
+
+```
+
+La gráfica nos muestra el precio de las acciones en euros de la empresa BMW desde el 2009 hasta el 22 de abril del 2024.
+
+### 7. Prueba de Estacionariedad
+Determina si tu serie de tiempo es estacionaria o no. Utiliza la prueba de Dickey Fuller Aumentada. Determina si es integrada y de qué orden.
+```{r}
+adf.test(Xt_cierre, alternative = "stationary")
+
+```
+Nuestra serie de tiempo sí es estacionaria por el valor de p<0.05. Por lo tanto, no es integrada.
+
+### 8. Función de Autocorrelación (ACF)
+Grafica la ACF de tu serie de tiempo. Escribe los estimadores de la ACF de tu serie de tiempo.
+```{r}
+acfx<-acf(Xt_cierre, main="ACF Precio de las acciones de BMW")
+acfx
+```
+
+
+### 9. Función de Autocorrelación Parcial (PACF)
+Grafica la PACF de tu serie de tiempo. Escribe los estimadores de la PACF de tu serie de tiempo.
+```{r}
+pacfx<-pacf(Xt_cierre, main="PACF Precio de las acciones de BMW")
+pacfx
+```
+

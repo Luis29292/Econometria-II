@@ -86,4 +86,12 @@ pacfx
 (2) Grafica la función de autocorrelación de los procesos estimada por R (usa la función acf(X)).
 (3) Grafica la función de autocorrelación parcial de los procesos estimada por R (usa la función pacf(X)).
 
-Para los incisos
+Para los incisos a) y b).
+
+(1) Calcula de manera analítica, en tu cuaderno, la función de autocorrelación de los procesos dados, para los primeros 5 periodos: $\rho_0$, $\rho_1$,$\rho_2$, $\rho_3$ y $\rho_4$.
+(2) Compara estos valores que calculaste analíticamente con los estimados por R con la función acf.
+
+Para los incisos c) y d)
+
+(1) Calcula la función de autocorrelación parcial de los procesos dados, para los primeros 5 periodos: $\varphi_1$,$\varphi_2$,$\varphi_3$,$\varphi_4$,$\varphi_5$ usando modelos de regresión lineal en R, como se hizo en clase.
+(2) Compara estos valores que calculaste con los estimados por R con la función pacf.
