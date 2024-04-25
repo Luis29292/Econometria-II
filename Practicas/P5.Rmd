@@ -8,6 +8,8 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tseries)
+library(dplyr)
+library(forecast)
 ```
 
 ## Práctica 5
@@ -48,17 +50,76 @@ dX3<-diff(dX2)
 plot(dX3, type="l", col="blue", lwd=2, xlab="t", ylab="dX(t)")
 adf.test(dX3)
 ```
+Se integró 3 veces la función para que sea estacionaria. Una vez alcanzado el p-value menor a 0.05, se puede decir que ya lo es.
 
 - **d) Concluye que `Xt` es integrada de orden `d`, `I(d)`.** ¿Cuál es el valor de `d`?
 
+Xt es integrada de orden 3. I(3)
+
 Realiza el mismo ejercicio para `Yt`, `Zt`.
+
+```{r}
+Yt<-as.ts(Y)
+ts.plot(Yt)
+adf.test(Yt)
+dY1<-diff(Yt)
+plot(dY1, type="l", col="blue", lwd=2, xlab="t", ylab="dY(t)")
+adf.test(dY1)
+```
+Se integró 1 vez la función para que sea estacionaria. Una vez alcanzado el p-value menor a 0.05, se puede decir que ya lo es.
+Yt es integrada de orden 1. I(1)
+
+```{r}
+Zt<-as.ts(Z)
+ts.plot(Zt)
+adf.test(Zt)
+dZ1<-diff(Zt)
+plot(dZ1, type="l", col="blue", lwd=2, xlab="t", ylab="dZ(t)")
+adf.test(dZ1)
+dZ2<-diff(dZ1)
+plot(dZ2, type="l", col="blue", lwd=2, xlab="t", ylab="dZ(t)")
+adf.test(dZ2)
+
+```
+Se integró 2 veces la función para que sea estacionaria. Una vez alcanzado el p-value menor a 0.05, se puede decir que ya lo es.
+Zt es integrada de orden 2. I(2)
 
 ### (2) La serie de tiempo `Yt`
 - **a) Una vez que tu serie de tiempo `Yt` sea estacionaria, llama a esta nueva serie de tiempo, `Pt` (realiza un cambio de variable).** Grafica las funciones `acf` y `pacf` de `Pt`. Pide a R que escriba los valores numéricos de las funciones `acf` y `pacf` de `Pt`.
+```{r}
+Pt<-dY1
+acfP<-acf(Pt)
+acfP
+pacfP<-pacf(Pt)
+pacfP
+```
+
 - **b) Revisa la `acf` y `pacf` de `Pt` para determinar qué modelo de serie de tiempo podría ser el que generó a `Pt`.** Justifica por qué podría ser un `AR(p)` y determina de qué orden sería.
+
+Al observar la PACF, se puede concluir que podría ser un`AR(2)`
+
 - **c) Conclusión:** Concluye que la serie original `Yt` es candidata a ser un `ARIMA(p, d, q)` y escribe los valores de `p`, `d`, `q`.
+```{r}
+auto.arima(Yt)
+```
+Por lo tanto, p=2, d=1, q=0
 
 ### (3) La serie de tiempo `Zt`
 - **a) Una vez que tu serie de tiempo `Zt` sea estacionaria, llama a esta nueva serie de tiempo, `Ht` (realiza un cambio de variable).** Grafica las funciones `acf` y `pacf` de `Ht`. Pide a R que escriba los valores numéricos de las funciones `acf` y `pacf` de `Ht`.
+```{r}
+Ht<-dZ2
+acfH<-acf(Ht)
+acfH
+pacfH<-pacf(Ht)
+pacfH
+```
+
 - **b) Revisa la `acf` y `pacf` de `Ht` para determinar qué modelo de serie de tiempo podría ser el que generó a `Ht`.** Justifica por qué podría ser un `MA(q)` y determina de qué orden sería.
+
+Al observar las gráficas, por la pacf que cae gradualmente a cero es MA, y por las barras que sobresalen en la acf, podría ser un `MA(2)`
+
 - **c) Conclusión:** Concluye que la serie original `Zt` es candidata a ser un `ARIMA(p, d, q)` y escribe los valores de `p`, `d`, `q`.
+```{r}
+auto.arima(Zt)
+```
+Por lo tanto, p=4, d=2, q=2
