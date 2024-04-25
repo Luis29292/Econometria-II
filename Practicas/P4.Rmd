@@ -11,6 +11,18 @@ knitr::opts_chunk$set(echo = TRUE)
 
 (1) Realiza una gráfica con los primeros 400 valores de los siguientes procesos
 estocásticos.
+(2) Grafica la función de autocorrelación de los procesos estimada por R (usa la función acf(X)).
+(3) Grafica la función de autocorrelación parcial de los procesos estimada por R (usa la función pacf(X)).
+
+Para los incisos a) y b).
+
+(1) Calcula de manera analítica, en tu cuaderno, la función de autocorrelación de los procesos dados, para los primeros 5 periodos: $\rho_0$, $\rho_1$,$\rho_2$, $\rho_3$ y $\rho_4$.
+(2) Compara estos valores que calculaste analíticamente con los estimados por R con la función acf.
+
+Para los incisos c) y d)
+
+(1) Calcula la función de autocorrelación parcial de los procesos dados, para los primeros 5 periodos: $\varphi_1$,$\varphi_2$,$\varphi_3$,$\varphi_4$,$\varphi_5$ usando modelos de regresión lineal en R, como se hizo en clase.
+(2) Compara estos valores que calculaste con los estimados por R con la función pacf.
 a) $X_t = 0.4W_{t−1} + W_t$
 ```{r}
 n<-400
@@ -63,6 +75,48 @@ acfx<-acf(X)
 acfx
 pacfx<-pacf(X)
 pacfx
+
+X1<-numeric(n)
+for (t in 2:n)
+  X1[t]<-X[t-1]
+
+X2<-numeric(n)
+for (t in 3:n)
+  X2[t]<-X[t-2]
+
+X3<-numeric(n)
+for (t in 4:n)
+  X3[t]<-X[t-3]
+
+X4<-numeric(n)
+for (t in 5:n)
+  X4[t]<-X[t-4]
+
+X5<-numeric(n)
+for (t in 6:n)
+  X5[t]<-X[t-5]
+
+X<-X[-c(1:6)]
+X1<-X1[-c(1:6)]
+X2<-X2[-c(1:6)]
+X3<-X3[-c(1:6)]
+X4<-X4[-c(1:6)]
+X5<-X5[-c(1:6)]
+
+modelo1<-lm(X~X1)
+summary(modelo1)
+
+modelo2<-lm(X~X1+X2)
+summary(modelo2) 
+
+modelo3<-lm(X~X1+X2+X3)
+summary(modelo3) 
+
+modelo4<-lm(X~X1+X2+X3+X4)
+summary(modelo4)
+
+modelo5<-lm(X~X1+X2+X3+X4+X5)
+summary(modelo5)
 ```
 d) $X_t = 0.2X_{t−1} + 0.3X_{t−2} + W_t$ con $X_1 = 1$ con $X_2 = 0$
 ```{r}
@@ -82,16 +136,47 @@ acfx<-acf(X)
 acfx
 pacfx<-pacf(X)
 pacfx
+
+X1<-numeric(n)
+for (t in 2:n)
+  X1[t]<-X[t-1]
+
+X2<-numeric(n)
+for (t in 3:n)
+  X2[t]<-X[t-2]
+
+X3<-numeric(n)
+for (t in 4:n)
+  X3[t]<-X[t-3]
+
+X4<-numeric(n)
+for (t in 5:n)
+  X4[t]<-X[t-4]
+
+X5<-numeric(n)
+for (t in 6:n)
+  X5[t]<-X[t-5]
+
+X<-X[-c(1:6)]
+X1<-X1[-c(1:6)]
+X2<-X2[-c(1:6)]
+X3<-X3[-c(1:6)]
+X4<-X4[-c(1:6)]
+X5<-X5[-c(1:6)]
+
+modelo1<-lm(X~X1)
+summary(modelo1)
+
+modelo2<-lm(X~X1+X2)
+summary(modelo2) 
+
+modelo3<-lm(X~X1+X2+X3)
+summary(modelo3) 
+
+modelo4<-lm(X~X1+X2+X3+X4)
+summary(modelo4)
+
+modelo5<-lm(X~X1+X2+X3+X4+X5)
+summary(modelo5)
 ```
-(2) Grafica la función de autocorrelación de los procesos estimada por R (usa la función acf(X)).
-(3) Grafica la función de autocorrelación parcial de los procesos estimada por R (usa la función pacf(X)).
 
-Para los incisos a) y b).
-
-(1) Calcula de manera analítica, en tu cuaderno, la función de autocorrelación de los procesos dados, para los primeros 5 periodos: $\rho_0$, $\rho_1$,$\rho_2$, $\rho_3$ y $\rho_4$.
-(2) Compara estos valores que calculaste analíticamente con los estimados por R con la función acf.
-
-Para los incisos c) y d)
-
-(1) Calcula la función de autocorrelación parcial de los procesos dados, para los primeros 5 periodos: $\varphi_1$,$\varphi_2$,$\varphi_3$,$\varphi_4$,$\varphi_5$ usando modelos de regresión lineal en R, como se hizo en clase.
-(2) Compara estos valores que calculaste con los estimados por R con la función pacf.
