@@ -1084,6 +1084,83 @@ PACF de tu serie de tiempo.</p>
 ##   0.000   0.011  -0.008   0.004   0.000   0.021   0.014</code></pre>
 </div>
 </div>
+<div id="segunda-parte." class="section level2">
+<h2>Segunda parte.</h2>
+<div id="ajuste-del-modelo." class="section level3">
+<h3>Ajuste del modelo.</h3>
+<div id="mejor-modelo-aic" class="section level4">
+<h4>(1) Mejor modelo AIC</h4>
+<p><strong>(a)</strong> Ajusta un modelo ARIMA a tu serie de tiempo. En
+esta ocasión utilizaremos el criterio de información de Akaike para
+seleccionar el mejor modelo. Usa el método visto en clase. Imprime una
+tabla con los 5 mejores modelos, según AIC.</p>
+<pre class="r"><code>P&lt;-2
+D&lt;-1
+Q&lt;-5
+tabla&lt;-data.frame()
+for(p in 0:P){
+  for(d in 0:D){
+    for(q in 0:Q){
+      modelo&lt;-arima(Xt_cierre,order=c(p,d,q))
+      AIC&lt;-AIC(modelo)
+      sbic&lt;-AIC(modelo,k=log(length(Xt_cierre)))
+      tabla&lt;-rbind(tabla,c(p,d,q,AIC,sbic))
+    }
+  }
+}
+tabla&lt;-rename(tabla, &#39;p&#39;=1,&#39;d&#39;=2,&#39;q&#39;=3,&#39;AIC&#39;=4,&#39;sbic&#39;=5)
+tabla&lt;-tabla[order(tabla$AIC),]
+tabla &lt;- head(tabla, 5)
+tabla</code></pre>
+<pre><code>##    p d q      AIC     sbic
+## 34 2 1 3 21327.20 21366.86
+## 7  0 1 0 21331.58 21338.19
+## 19 1 1 0 21331.66 21344.88
+## 8  0 1 1 21331.69 21344.92
+## 25 2 0 0 21332.36 21358.80</code></pre>
+<p><strong>(b)</strong> Determina si cada uno de los coeficientes del
+mejor modelo según AIC es significativo, incluyendo el intercepto. En
+caso de que un coeficiente no sea significativo pasa al siguiente mejor
+modelo.</p>
+<pre class="r"><code>ajuste1&lt;-arima(Xt_cierre,order=c(0,1,0))
+ajuste1</code></pre>
+<pre><code>## 
+## Call:
+## arima(x = Xt_cierre, order = c(0, 1, 0))
+## 
+## 
+## sigma^2 estimated as 2.852:  log likelihood = -10664.79,  aic = 21331.58</code></pre>
+<pre class="r"><code>confint(ajuste1)</code></pre>
+<pre><code>##      2.5 % 97.5 %</code></pre>
+<p>El modelo (0,1,0) representa una caminata aleatoria</p>
+<p><strong>(c)</strong> Calcula los intervalos de confianza de los
+estimadores del mejor modelo.</p>
+<p>Como es una caminata aleatoria, no hya intervalos de confianza.</p>
+<p><strong>(d)</strong> Escribe la ecuación del mejor modelo. Un modelo
+ARIMA(p, d, q) puede ser escrito de la forma: <span class="math display">\[(1 - \alpha_1R - \alpha_2R^2 - ... -
+\alpha_pR^p)(1 - R)^dX_t = c + (1 + \theta_1R + \theta_2R^2 + ... +
+\theta_qR^q)W_t\]</span> donde <span class="math inline">\(R\)</span> es
+el operador rezago: <span class="math display">\[RX_t = X_{t-1}\]</span>
+<span class="math display">\[R^2X_t = X_{t-2}\]</span> <span class="math display">\[R^nX_t = X_{t-n}\]</span> <span class="math inline">\(X_t=W_t\)</span> es un proceso estacionario de
+ruido blanco.</p>
+<p><strong>(e)</strong> Calcula los intervalos de confianza para los
+parámetros que calculaste.</p>
+</div>
+<div id="mejor-modelo-de-ajuste-de-r." class="section level4">
+<h4>(2) Mejor modelo de ajuste de R.</h4>
+<p><strong>(a)</strong> Usa la función de R <code>auto.arima(X)</code>
+donde <span class="math inline">\(X\)</span> es la serie de tiempo. Para
+que R ajuste un modelo ARIMA de manera automática.</p>
+<p><strong>(b)</strong> Determina si cada uno de los coeficientes del
+modelo escogido es significativo, incluyendo el intercepto. En caso de
+que un coeficiente no sea significativo pasa al siguiente mejor
+modelo.</p>
+<p><strong>(c)</strong> Escribe la ecuación de tu modelo.</p>
+<p><strong>(d)</strong> Calcula los intervalos de confianza para los
+parámetros que calculaste.</p>
+</div>
+</div>
+</div>
 </div>
 
 

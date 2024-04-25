@@ -86,3 +86,66 @@ pacfx<-pacf(Xt_cierre, main="PACF Precio de las acciones de BMW")
 pacfx
 ```
 
+## Segunda parte.
+### Ajuste del modelo.
+
+#### (1) Mejor modelo AIC
+**(a)** Ajusta un modelo ARIMA a tu serie de tiempo. En esta ocasión utilizaremos el criterio de información de Akaike para seleccionar el mejor modelo. Usa el método visto en clase. Imprime una tabla con los 5 mejores modelos, según AIC.
+```{r}
+P<-2
+D<-1
+Q<-5
+tabla<-data.frame()
+for(p in 0:P){
+  for(d in 0:D){
+    for(q in 0:Q){
+      modelo<-arima(Xt_cierre,order=c(p,d,q))
+      AIC<-AIC(modelo)
+      sbic<-AIC(modelo,k=log(length(Xt_cierre)))
+      tabla<-rbind(tabla,c(p,d,q,AIC,sbic))
+    }
+  }
+}
+tabla<-rename(tabla, 'p'=1,'d'=2,'q'=3,'AIC'=4,'sbic'=5)
+tabla<-tabla[order(tabla$AIC),]
+tabla <- head(tabla, 5)
+tabla
+```
+
+
+**(b)** Determina si cada uno de los coeficientes del mejor modelo según AIC es significativo, incluyendo el intercepto. En caso de que un coeficiente no sea significativo pasa al siguiente mejor modelo.
+```{r}
+ajuste1<-arima(Xt_cierre,order=c(0,1,0))
+ajuste1
+confint(ajuste1)
+```
+
+El modelo (0,1,0) representa una caminata aleatoria
+
+**(c)** Calcula los intervalos de confianza de los estimadores del mejor modelo.
+
+Como es una caminata aleatoria, no hay intervalos de confianza.
+
+**(d)** Escribe la ecuación del mejor modelo.
+Un modelo ARIMA(p, d, q) puede ser escrito de la forma:
+$$(1 - \alpha_1R - \alpha_2R^2 - ... - \alpha_pR^p)(1 - R)^dX_t = c + (1 + \theta_1R + \theta_2R^2 + ... + \theta_qR^q)W_t$$
+donde \( R \) es el operador rezago:
+$$RX_t = X_{t-1}$$
+$$R^2X_t = X_{t-2}$$
+$$R^nX_t = X_{t-n}$$
+$X_t=W_t$ es un proceso estacionario de ruido blanco.
+
+**(e)** Calcula los intervalos de confianza para los parámetros que calculaste.
+```{r}
+confint(ajuste1)
+```
+
+
+#### (2) Mejor modelo de ajuste de R.
+**(a)** Usa la función de R `auto.arima(X)` donde \( X \) es la serie de tiempo. Para que R ajuste un modelo ARIMA de manera automática.
+
+**(b)** Determina si cada uno de los coeficientes del modelo escogido es significativo, incluyendo el intercepto. En caso de que un coeficiente no sea significativo pasa al siguiente mejor modelo.
+
+**(c)** Escribe la ecuación de tu modelo.
+
+**(d)** Calcula los intervalos de confianza para los parámetros que calculaste.
