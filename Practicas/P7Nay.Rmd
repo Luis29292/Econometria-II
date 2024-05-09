@@ -1,0 +1,92 @@
+---
+title: "Práctica 7"
+author: "Naydelín Guadalupe Arenas Herrera"
+date: '2024-05-09'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+library(tseries)
+library(dplyr)
+library(forecast)
+```
+
+
+# Práctica 7
+En esta práctica continuamos usando el archivo `prac6.csv` que se encuentra en el aula virtual.
+```{r}
+Xt <- read_csv("./prac6b.csv")
+Xt <- as.ts(Xt)
+```
+
+## 1. Para el mejor modelo de acuerdo a AIC de la práctica 6:
+
+a) Determina la significancia de los coeficientes estimados.
+```{r}
+modelo<-arima(Xt,order=c(3,0,1))
+summary(modelo)
+```
+
+b) Calcula los intervalos de confianza para los estimadores:
+```{r}
+confint(modelo)
+```
+
+c) Grafica los residuos de este modelo:
+```{r}
+residuos <- resid(modelo)
+plot(residuos)
+```
+
+d) Grafica la ACF para los residuos de este modelo.
+```{r}
+acf(residuos)
+```
+
+
+e) Realiza la prueba de Ljung-Box para los residuos del modelo. Concluye si los residuos del modelo son ruido blanco o no. Utiliza la función:
+```{r}
+Box.test(resid(modelo), lag = 20, type = "Ljung-Box")
+```
+Se puede observar, que los residuos de nuestro modelo son ruido blanco, al p ser mayor a 0.05.
+
+## 2. Un modelo que no elimina la autocorrelación
+Supongamos el ajuste de un modelo incorrecto, ARIMA(1,0,1) para Xt.
+En esta sección, "ajuste2" es la variable que contiene la información del ajuste hecho por R,
+```{r}
+ajuste2 <- arima(Xt, order = c(1, 0, 1))
+```
+
+a) Determina la significancia de los coeficientes estimados para el mejor candidato de acuerdo a AIC.
+```{r}
+summary(ajuste2)
+
+```
+Son significativos los coeficientes estimados
+
+b) Calcula los intervalos de confianza para los estimadores:
+```{r}
+confint(ajuste2)
+```
+
+c) Grafica los residuos de este modelo:
+```{r}
+residuos <- resid(ajuste2)
+plot(residuos)
+```
+
+d) Grafica la ACF para los residuos de este modelo
+```{r}
+acf(residuos)
+```
+
+
+e) Realiza la prueba de Ljung-Box para los residuos del modelo. Concluye si los residuos del modelo son ruido blanco o no. Utiliza la función:
+
+```{r}
+Box.test(resid(ajuste2), lag = 20, type = "Ljung-Box")
+```
+
+Se puede observar, que los residuos de nuestro modelo no son ruido blanco, al p ser menor a 0.05.

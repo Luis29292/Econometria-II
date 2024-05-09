@@ -1,6 +1,6 @@
 ---
 title: "Proyecto Final"
-author: "Luis Domínguez & Miguel Gutiérrez"
+author: "Luis Domínguez, Miguel Gutiérrez, Cassandra López, Cristina Escobar"
 date: '2024-04-22'
 output: html_document
 ---
@@ -10,6 +10,8 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tseries)
 library(dplyr)
 library(xts)
+library(forecast)
+
 ```
 
 
@@ -133,7 +135,7 @@ donde \( R \) es el operador rezago:
 $$RX_t = X_{t-1}$$
 $$R^2X_t = X_{t-2}$$
 $$R^nX_t = X_{t-n}$$
-$X_t=W_t$ es un proceso estacionario de ruido blanco.
+$X_t=X_{t-1}+W_t$ es un proceso estacionario de ruido blanco.
 
 **(e)** Calcula los intervalos de confianza para los parámetros que calculaste.
 ```{r}
@@ -143,9 +145,87 @@ confint(ajuste1)
 
 #### (2) Mejor modelo de ajuste de R.
 **(a)** Usa la función de R `auto.arima(X)` donde \( X \) es la serie de tiempo. Para que R ajuste un modelo ARIMA de manera automática.
+```{r}
+mejor_modelo<-auto.arima(Xt_cierre)
+mejor_modelo
+
+```
+
 
 **(b)** Determina si cada uno de los coeficientes del modelo escogido es significativo, incluyendo el intercepto. En caso de que un coeficiente no sea significativo pasa al siguiente mejor modelo.
 
+Debido a que nuestro modelo es una caminata aleatoria, no hay coeficientes significativos.
+
+
 **(c)** Escribe la ecuación de tu modelo.
 
+$Xt = X_{t-1} + W_t$
+
 **(d)** Calcula los intervalos de confianza para los parámetros que calculaste.
+```{r}
+confint(mejor_modelo)
+```
+
+## Tercera parte
+
+#### 1. Grafica los residuos de tu modelo. Grafica la acf de los residuos de tu modelo. Interpreta ambas gráficas.
+```{r}
+residuos<-resid(mejor_modelo)
+plot(residuos, main="Residuos del modelo ARIMA(0,1,0)")
+acf(residuos, main="ACF de los residuos del modelo ARIMA(0,1,0)")
+```
+
+La primera gráfica tiene una oscilación constante, hasta poco antes del 2020, que fue cuando se disparó el precio de las acciones de BMW.
+
+En cuanto a la segunda, al ser una caminata aleatoria, no van a haber residuos significativos.
+
+#### 2. Usa la prueba de Ljung-Box para revisar si los residuos de tu modelo son ruido blanco. Interpreta el resultado.
+```{r}
+Box.test(residuos, lag=20, type="Ljung-Box")
+```
+Por lo tanto, los residuos de nuestro modelo son ruido blanco, al p ser mayor a 0.05, con base en la hipótesis alternativa.
+
+#### 3. Realiza un histograma de los residuos de tu modelo. Con la función `hist(resid(modeloX),freq=FALSE)` donde `modeloX` es el nombre de la variable del ajuste de tu modelo.
+```{r}
+hist(resid(mejor_modelo),freq=FALSE)
+```
+
+
+#### 4. Revisa que tus residuos tengan una distribución normal:
+```{r}
+# guarda los residuos en una variable, por ejemplo, x
+x <- resid(mejor_modelo)
+# crea un intervalo del mínimo residuo al máximo residuo
+intervalo <- seq(min(x), max(x), length = 300)
+# crea una distribución normal en el intervalo, con la media y desv. est. de los residuos
+distnormal <- dnorm(intervalo, mean=mean(x),sd=sd(x))
+# grafica el histograma de los residuos
+hist(x,freq=FALSE)
+# grafica la distribución normal encima del histograma
+lines(intervalo,distnormal, col='red')
+```
+Se observa una distribución normal en los residuos.
+
+#### 5. Realiza un pronóstico usando tu modelo con la función `forecast()` y grafica el pronóstico. Para esto necesitas la biblioteca `forecast` (`library(forecast)`).
+```{r}
+pronostico <- forecast(mejor_modelo, h = 20)
+plot(pronostico)
+    ```
+    donde `p` es el número de periodos para el pronóstico. La gráfica significa que existe un 80% de probabilidad de que los valores futuros del modelo estén dentro del área oscura sombreada y un 95% de probabilidad de que estén en el área clara sombreada.
+
+#### 6. Calcula las raíces de tu modelo con la función `autoplot()`.
+```{r}
+autoplot(mejor_modelo)
+```
+    
+    Si las raíces están fuera (o muy cerca) del círculo unitario, tu modelo será numéricamente inestable y no será adecuado para hacer un pronóstico.
+
+#### 7. Da una interpretación de cada uno de los coeficientes numéricos que estimaste en la primera parte.
+
+Al ser una caminata aleratoria, no hay coeficientes significativos.
+
+#### 8. Redacta un breve resumen de lo que encontraste, evita ser repetitivo. Así mismo, comenta sobre la relación entre los datos y los parámetros del modelo. Discute también las áreas de oportunidad de tu estudio, ya sea debido a la recolección de datos o a la metodología. Escribe algunas sugerencias para futuros trabajos. Incluye la bibliografía que hayas utilizado.
+
+En este proyecto, utilizamos el modelo ARIMA para predecir el precio de las acciones de BMW. Encontramos que el mejor modelo es una caminata aleatoria, lo que significa que no hay coeficientes significativos. Los residuos de nuestro modelo son ruido blanco, lo que significa que no hay patrones en los residuos. La distribución de los residuos es normal, lo que significa que el modelo es adecuado. El pronóstico de nuestro modelo muestra que el precio de las acciones de BMW se mantendrá estable en los próximos 20 días. En cuanto a las áreas de oportunidad, se podría mejorar la recolección de datos para tener una serie de tiempo más larga y precisa. Para futuros trabajos, se podría utilizar un modelo más complejo para predecir el precio de las acciones de BMW.
+
+Fuente: https://mx.investing.com/equities/bay-mot-werke-historical-data

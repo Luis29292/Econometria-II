@@ -1,0 +1,106 @@
+---
+title: "P6"
+author: "Luis Domínguez"
+date: '2024-04-25'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+library(tseries)
+library(dplyr)
+library(forecast)
+```
+
+## Práctica 6
+En el aula virtual se encuentra el archivo `prac6b.csv`.
+
+### (1) Inspección de Xt
+**a)** Carga en R los datos del archivo. Los datos contienen una serie de tiempo. Llama a esta serie de tiempo `Xt`.
+```{r}
+Xt <- read_csv("./prac6b.csv")
+Xt <- as.ts(Xt)
+```
+
+
+**b)** Supongamos que ya sabes que `Xt` es una serie de tiempo estacionaria. Calcula la ACF y la PACF para `Xt`. ¿Cuántos valores significativos tiene la ACF? ¿Cuántos valores significativos tiene la PACF?
+```{r}
+acfXt <- acf(Xt)
+pacfXt <- pacf(Xt)
+acfXt
+pacfXt
+```
+
+**c)** Realiza una inspección visual, discute con tus compañeros qué valores podrían usarse como máximos `p`, `d`, `q`, para probar distintos candidatos en modelos ARIMA(`p`, `d`, `q`).
+
+### (2) Candidatos para el modelo de Xt
+Calcula los coeficientes AIC y BIC para varios candidatos ARIMA(`p`, `d`, `q`). Puedes utilizar el ciclo `for` visto en clase. Para fines prácticos, utiliza un máximo de 3 para `p`, un máximo de 3 para `q` y un máximo de 0 para `d`, puesto que es estacionaria.
+```{r}
+P<-3
+D<-0
+Q<-3
+tabla<-data.frame()
+for(p in 0:P){
+  for(d in 0:D){
+    for(q in 0:Q){
+      modelo<-arima(Xt,order=c(p,d,q))
+      AIC<-AIC(modelo)
+      sbic<-AIC(modelo,k=log(length(Xt)))
+      tabla<-rbind(tabla,c(p,d,q,AIC,sbic))
+    }
+  }
+}
+tabla<-rename(tabla, 'p'=1,'d'=2,'q'=3,'AIC'=4,'sbic'=5)
+tabla<-tabla[order(tabla$AIC),]
+# tabla<-tabla[order(tabla$sbic),]
+tabla
+```
+
+
+**a)** Realiza una gráfica con los valores de AIC para los distintos modelos calculados.
+```{r}
+plot(tabla$AIC, type="l", col="blue", lwd=2, xlab="Modelo", ylab="AIC")
+
+```
+
+
+**b)** Realiza una gráfica con los valores de BIC para los distintos modelos calculados.
+```{r}
+plot(tabla$sbic, type="l", col="blue", lwd=2, xlab="Modelo", ylab="BIC")
+
+```
+
+
+**c)** ¿Cuál es el mejor candidato de acuerdo a AIC?
+
+El mejor candidato de acuerdo a AIC es el modelo ARIMA(3,0,1).
+
+**d)** ¿Cuál es el mejor candidato de acuerdo a BIC?
+
+```{r}
+tabla<-tabla[order(tabla$sbic),]
+tabla
+```
+
+El mejor candidato de acuerdo a BIC es el modelo ARIMA(1,0,2).
+
+**e)** ¿Cuál es el segundo mejor candidato de acuerdo a AIC?
+
+(1,0,3)
+
+**f)** ¿Cuál es el segundo mejor candidato de acuerdo a BIC?
+
+(2,0,1)
+
+**Nota:** Con la instrucción:
+`tabla <- tabla[order(tabla$AIC), ]`
+R ordenará la tabla de acuerdo a la columna AIC.
+
+**g)** Determina la significancia de los coeficientes estimados para el mejor candidato de acuerdo a AIC.
+```{r}
+modelo<-arima(Xt,order=c(3,0,1))
+summary(modelo)
+```
+
+Todos los coeficientes son significativos.
